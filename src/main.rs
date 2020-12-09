@@ -1,14 +1,34 @@
-use std::process::Command;
+use std::process::{Command, Stdio};
 mod youtube;
 mod rave;
 
 
 fn main() {
-//    youtube::upload();
+
+   Command::new("killall")
+       .arg("geckodriver")
+       .output()
+       .expect("failed to kill geckodriver on killall");
+
+    let mut gecko = Command::new("geckodriver")
+        .args(&["--port", "4444"])
+       .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .spawn()
+        .expect("failed to run geckodriver");
+
    let videos = youtube::get_videos();
-    println!("{:?}", videos);
-   let name = rave::make_mashup(videos.clone());
-   //println!("{}", name.unwrap());
+    //println!("{:?}", videos);
+    println!("\nVideos Fecthed: \n{}\n{}", &videos[1], &videos[3]);
+
+    println!("\nMaking Mashup...");
+    let name = rave::make_mashup(videos.clone());
+    println!("Mashup Done");
+
+    println!("\nFinal Name: {} (Mashup)", name.as_ref().unwrap());
+
+    gecko.kill().expect("Failed to kill geckodriver");
+
   Command::new("montage")
        .args(&["[0-1].jpg", "-tile", "1x2", "-geometry", "+0+0", "out.png"])
        .output()
@@ -19,6 +39,8 @@ fn main() {
         .expect("failed to execute process");
     let mut tags = videos;
     tags.remove(0);
-    tags.remove(0);
+    tags.remove(1);
+    println!("\nUploading Video...");
     youtube::upload(name.unwrap(), tags);
+    println!("Video Uploaded!");
 }

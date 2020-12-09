@@ -50,13 +50,15 @@ match result {
     Err(e) => println!("error: {}", e),
     Ok(res) => {
         let videos = res.1.items.unwrap();
+
         let index0 = rng.gen_range(0, 40);
         vec.push(videos[index0].id.as_ref().unwrap().clone());
+        vec.push(videos[index0].snippet.as_ref().unwrap().title.as_ref().unwrap().clone());
 
         let index1 = rng.gen_range(0, 40);
         vec.push(videos[index1].id.as_ref().unwrap().clone());
-        //println!("{:?}", videos[index].id.as_ref().unwrap());
-        println!("random numbers = {} {}", index0, index1);
+        vec.push(videos[index1].snippet.as_ref().unwrap().title.as_ref().unwrap().clone());
+
         vec.extend(videos[index0].snippet.as_ref().unwrap().tags.as_ref().unwrap().to_vec());
        vec.extend(videos[index1].snippet.as_ref().unwrap().tags.as_ref().unwrap().to_vec());
 }
@@ -97,7 +99,6 @@ let hub = YouTube::new(hyper::Client::with_connector(hyper::net::HttpsConnector:
         tags.pop();
         tagsize = tags.join("");
     }
-    println!("tagsize: {}", tagsize.len());
 
     snip.tags =  Some(tags);
 
@@ -105,12 +106,8 @@ let hub = YouTube::new(hyper::Client::with_connector(hyper::net::HttpsConnector:
     req.status = Some(status);
     req.snippet = Some(snip);
 
-
-
-println!("{:?}", req);
-let result = hub.videos().insert(req)
+    let result = hub.videos().insert(req)
              .notify_subscribers(true)
              .upload(fs::File::open("./finished.mp4").unwrap(), "video/mp4".parse().unwrap());
 
-    println!("{:?}", result);
 }
