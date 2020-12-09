@@ -40,7 +40,7 @@ let hub = YouTube::new(hyper::Client::with_connector(hyper::net::HttpsConnector:
 let result = hub.videos().list("snippet")
              .video_category_id("10")
              .region_code("US")
-             .max_results(40)
+             .max_results(50)
              .chart("mostPopular")
              .doit();
 
@@ -51,11 +51,11 @@ match result {
     Ok(res) => {
         let videos = res.1.items.unwrap();
 
-        let index0 = rng.gen_range(0, 40);
+        let index0 = rng.gen_range(0, 50);
         vec.push(videos[index0].id.as_ref().unwrap().clone());
         vec.push(videos[index0].snippet.as_ref().unwrap().title.as_ref().unwrap().clone());
 
-        let index1 = rng.gen_range(0, 40);
+        let index1 = rng.gen_range(0, 50);
         vec.push(videos[index1].id.as_ref().unwrap().clone());
         vec.push(videos[index1].snippet.as_ref().unwrap().title.as_ref().unwrap().clone());
 

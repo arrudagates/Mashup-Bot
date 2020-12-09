@@ -34,7 +34,7 @@ fn main() {
        .output()
        .expect("fail");
   Command::new("ffmpeg")
-           .args(&["-y", "-i", "result.mp4", "-f", "image2", "-loop", "1", "-i", "out.png", "-map", "1:v:0", "-map", "0:a:0", "-r", "15", "-s", "640x480", "-c:v", "libx264", "-crf", "18", "-tune", "stillimage", "-preset", "medium", "-shortest", "finished.mp4"])
+           .args(&["-y", "-i", "result.mp4", "-f", "image2", "-loop", "1", "-i", "out.png", "-map", "1:v:0", "-map", "0:a:0", "-r", "15", "-s", "1280x1440", "-c:v", "libx264", "-crf", "18", "-tune", "stillimage", "-preset", "medium", "-shortest", "finished.mp4"])
            .output()
         .expect("failed to execute process");
     let mut tags = videos;
